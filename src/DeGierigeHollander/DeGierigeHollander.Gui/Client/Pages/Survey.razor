@@ -1,5 +1,6 @@
 ﻿@page "/survey"
 @using DeGierigeHollander.Gui.Shared
+@using System.Text.Json;
 @inject HttpClient Http
 
 <PageTitle>Survey</PageTitle>
@@ -10,7 +11,7 @@
 
 @foreach (var question in Questions)
 {
-    <EditForm Model="@question" OnValidSubmit="() => OnValidSubmit(question)">
+    @*<EditForm Model="@question" OnValidSubmit="() => OnValidSubmit(question)">
         <p>@question.GetQuestion()</p>
         <InputNumber Value="@GetValue(question)" ValueChanged="@((int value) => ValueChanged(question, value))" ValueExpression="@(() => ((Question<int>)question).UserResponse)" />
         <input type="submit" value="Add" />
@@ -18,39 +19,41 @@
         {
             <p>@responseText</p>
         }
-    </EditForm>
+    </EditForm>*@
 }
 
 @code {
-    private IEnumerable<QuestionBase> Questions = Enumerable.Empty<QuestionBase>();
+    private IEnumerable<Question> Questions = Enumerable.Empty<Question>();
 
     private string? responseText;
 
-    protected override void OnInitialized()
+    protected override async Task  OnInitializedAsync()
     {
-        Questions = new List<QuestionBase>
-        {
-            new HomeWorkDaysQuestion(),
-        };
+        Questions = await GetQuestionsAsync();
     }
 
-    private async Task GetQuestionsAsync()
+    private async Task<IEnumerable<Question>> GetQuestionsAsync()
     {
-        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>();
+        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>("/api/questions");
+        Console.WriteLine(JsonSerializer.Serialize(questions));
+
+        return questions;
     }
 
-    private void OnValidSubmit(QuestionBase question)
+    private void OnValidSubmit(Question question)
     {
-        responseText = question.GetResponseText();
+        //responseText = question.GetResponseText();
     }
 
-    private int GetValue(QuestionBase question)
+    private int GetValue(Question question)
     {
-        return ((Question<int>)question).UserResponse;
+
+        return 0;
+        //return ((Question<int>)question).UserResponse;
     }
 
-    private void ValueChanged(QuestionBase question, int value)
+    private void ValueChanged(Question question, int value)
     {
-        ((Question<int>)question).UserResponse = value;
+        //((Question<int>)question).UserResponse = value;
     }
 }
