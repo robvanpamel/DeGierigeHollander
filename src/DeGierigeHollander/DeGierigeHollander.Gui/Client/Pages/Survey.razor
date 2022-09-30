@@ -10,7 +10,15 @@
 <h3>Let's go!</h3>
 @if (Questions.Any() && Questions.ToArray()[visibleQuestionIndex] is not null)
 {
-    <QuestionItem TItem=int OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+     @switch(GetTypeOf())
+    {
+        case TypeCode.Int32:
+         <QuestionItem TItem=Int32 OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+            break;
+        case TypeCode.Boolean:
+         <QuestionItem TItem=Boolean OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+            break;
+    }
 
 }
 @code {
@@ -36,5 +44,10 @@
             visibleQuestionIndex++;
         else
             Console.WriteLine("You're done");
+    }
+    private TypeCode GetTypeOf()
+    {
+        var type = Type.GetType(Questions.ToArray()[visibleQuestionIndex].AnswerType);
+        return Type.GetTypeCode(type);
     }
 }
