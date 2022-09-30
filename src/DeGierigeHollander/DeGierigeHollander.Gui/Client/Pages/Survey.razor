@@ -34,6 +34,11 @@
         };
     }
 
+    private async Task GetQuestionsAsync()
+    {
+        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>();
+    }
+
     private void OnValidSubmit(QuestionBase question)
     {
         responseText = question.GetResponseText();
