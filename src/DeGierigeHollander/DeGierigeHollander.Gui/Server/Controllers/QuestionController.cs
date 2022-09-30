@@ -56,8 +56,8 @@ public class QuestionController
     {
         var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
         _reportSession.LaptopQuestionReponsePricePerYear = calculation;
-        var responseText = $"Het verbruik van je laptop in slaapstand per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
-
+        var responseText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
+        _reportSession.TotalAsString.Add(responseText);
         return new AnswerResponse(responseText);
     }
 
@@ -69,8 +69,14 @@ public class QuestionController
         var result = uurHomeworkPerWeek * priceperHourHomework * 52;
         _reportSession.HomeQuestionPricePerYear = result;
 
-        var responseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
-
+        var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
+        _reportSession.LaptopQuestionReponsePricePerYear = calculation;
+        _reportSession.TotalAsString.Add(responseText);
+        
+        var responseText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
+        _reportSession.TotalAsString.Add(responseText);
+        var otherResponseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
+        _reportSession.TotalAsString.Add(otherResponseText);
         return new AnswerResponse(responseText);
     }
 
@@ -82,11 +88,15 @@ public class QuestionController
         {
             var pricePerShowerPerDay = DailyShowerVolumeInM3Gas * PricePerM3Gas;
             result = pricePerShowerPerDay * 5 * 52;
-            _reportSession.HomeQuestionPricePerYear = result;
+            _reportSession.ShowerPerYear = result;
+            var response = $"Door het douchen op werk bespaar je per jaar: {result} EUR";
+            _reportSession.TotalAsString.Add(response);
+            return new AnswerResponse(response);
+
         }
 
-        var responseText = $"Door het douchen op werk bespaar je per jaar: {result} EUR";
-
+        var responseText = $"Dommerik, Aangezien je geen douche neemt op het werk bespaar je hier niets!";  
+        _reportSession.TotalAsString.Add(responseText);
         return new AnswerResponse(responseText);
     }
 
