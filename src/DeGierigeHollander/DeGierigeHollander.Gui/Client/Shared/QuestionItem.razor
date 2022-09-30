@@ -1,0 +1,30 @@
+﻿@using DeGierigeHollander.Gui.Shared;
+@inject HttpClient HttpClient;
+
+<h3>Question</h3>
+
+<EditForm Model="@QuestionItem" OnValidSubmit="OnValidSubmit">
+    <p>@QuestionItem.QuestionString</p>
+    <InputNumber Value="@userResponse" ValueChanged="@((int value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
+    <input type="submit" value="Add" />
+    @if (!string.IsNullOrEmpty(responseText))
+    {
+        <p>@responseText</p>
+    }
+</EditForm>
+
+@code {
+    [Parameter]
+    public Question QuestionItem { get; set; }
+
+    private object userResponse;
+
+    private string responseText;
+
+    private async Task OnValidSubmit()
+    {
+        var response = await HttpClient.PostAsJsonAsync<Answer<int>>(QuestionItem.ResponseUrl, new Answer<int> { Value = (int)userResponse });
+        var answer = await response.Content.ReadFromJsonAsync<AnswerResponse>();
+        responseText = answer!.ResponseText;
+    }
+}
