@@ -1,0 +1,51 @@
+﻿@page "/survey"
+@using DeGierigeHollander.Gui.Shared
+@inject HttpClient Http
+
+<PageTitle>Survey</PageTitle>
+
+@using DeGierigeHollander.Gui.Shared
+
+<h3>Let's go!</h3>
+
+@foreach (var question in Questions)
+{
+    <EditForm Model="@question" OnValidSubmit="() => OnValidSubmit(question)">
+        <p>@question.GetQuestion()</p>
+        <InputNumber Value="@GetValue(question)" ValueChanged="@((int value) => ValueChanged(question, value))" ValueExpression="@(() => ((Question<int>)question).UserResponse)" />
+        <input type="submit" value="Add" />
+        @if (!string.IsNullOrEmpty(responseText))
+        {
+            <p>@responseText</p>
+        }
+    </EditForm>
+}
+
+@code {
+    private IEnumerable<QuestionBase> Questions = Enumerable.Empty<QuestionBase>();
+
+    private string? responseText;
+
+    protected override void OnInitialized()
+    {
+        Questions = new List<QuestionBase>
+        {
+            new HomeWorkDaysQuestion(),
+        };
+    }
+
+    private void OnValidSubmit(QuestionBase question)
+    {
+        responseText = question.GetResponseText();
+    }
+
+    private int GetValue(QuestionBase question)
+    {
+        return ((Question<int>)question).UserResponse;
+    }
+
+    private void ValueChanged(QuestionBase question, int value)
+    {
+        ((Question<int>)question).UserResponse = value;
+    }
+}
