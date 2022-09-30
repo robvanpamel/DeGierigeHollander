@@ -1,4 +1,5 @@
 using DeGierigeHollander.Gui.Server.Controllers;
+using DeGierigeHollander.Gui.Shared;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
