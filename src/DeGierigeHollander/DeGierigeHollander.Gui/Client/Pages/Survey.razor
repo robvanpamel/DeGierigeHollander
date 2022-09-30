@@ -25,7 +25,7 @@
 
     private async Task<IEnumerable<Question>> GetQuestionsAsync()
     {
-        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>("/api/questions");
+        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>("/question");
         Console.WriteLine(JsonSerializer.Serialize(questions));
 
         return questions;
