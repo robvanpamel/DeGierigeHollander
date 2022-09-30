@@ -8,14 +8,14 @@
 @using DeGierigeHollander.Gui.Shared
 
 <h3>Let's go!</h3>
-@if (question is not null)
+@if (Questions.Any() && Questions.ToArray()[visibleQuestionIndex] is not null)
 {
-    <QuestionItem QuestionItem=question></QuestionItem>
+    <QuestionItem TItem=int OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+
 }
 @code {
     private IEnumerable<Question> Questions = Enumerable.Empty<Question>();
 
-    private Question? question;
     private int visibleQuestionIndex = 0;
 
     protected override async Task OnInitializedAsync()
@@ -29,5 +29,12 @@
         Console.WriteLine(JsonSerializer.Serialize(questions));
 
         return questions;
+    }
+    private void OnNextQuestion()
+    {
+        if (Questions.Count() -1 > visibleQuestionIndex)
+            visibleQuestionIndex++;
+        else
+            Console.WriteLine("You're done");
     }
 }
