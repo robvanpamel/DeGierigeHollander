@@ -8,4 +8,9 @@ public class Answer<T>
 public class AnswerResponse
 {
     public string ResponseText { get; set; }
+
+    public AnswerResponse(string responseText)
+    {
+        ResponseText = responseText;
+    }
 }
