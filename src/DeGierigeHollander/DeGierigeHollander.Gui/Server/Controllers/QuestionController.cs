@@ -14,16 +14,17 @@ public class QuestionController
     {
         _reportSession = reportSession;
     }
-    public decimal PricePerKiloWatt { get; set; } = 2;
-    public decimal LaptopConsumptionStandBy { get; set; } = 2;
-    
+
+    public decimal PricePerKiloWatt { get; set; } = 0.896m;
+    public decimal LaptopConsumptionStandByKWH { get; set; } = 0.1m;
+
     public decimal HomeworkHeatingConsumption { get; set; } = 2;
 
     public decimal DailyHeatingVolumeInM3Gas = 2.1m;
     public decimal DailyShowerVolumeInM3Gas = 0.13m;
 
     public decimal PricePerM3Gas = 3.83m;
-    
+
     [HttpGet]
     public IEnumerable<Question> Get()
     {
@@ -49,14 +50,14 @@ public class QuestionController
             }
         };
     }
-    
+
     [HttpPost("/laptopQuestion")]
     public AnswerResponse LaptopQuestion(Answer<int> answer)
     {
-        var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandBy * 52;
+        var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
         _reportSession.LaptopQuestionReponsePricePerYear = calculation;
         var responseText = $"Het verbruik van je laptop in slaapstand per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
-        
+
         return new AnswerResponse(responseText);
     }
     
@@ -69,22 +70,26 @@ public class QuestionController
         _reportSession.HomeQuestionPricePerYear = result;
 
         var responseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
-        
+
         return new AnswerResponse(responseText);
     }
-    
+
     [HttpPost("/doucheQuestion")]
     public AnswerResponse DoucheQuestion(Answer<bool> answer)
     {
-        var pricePerShowerPerDay = DailyShowerVolumeInM3Gas * PricePerM3Gas;
-        var result = pricePerShowerPerDay * 3 * 52;
-        _reportSession.HomeQuestionPricePerYear = result;
+        var result = 0.0m;
+        if (answer.Value)
+        {
+            var pricePerShowerPerDay = DailyShowerVolumeInM3Gas * PricePerM3Gas;
+            result = pricePerShowerPerDay * 5 * 52;
+            _reportSession.HomeQuestionPricePerYear = result;
+        }
 
-        var responseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
-        
+        var responseText = $"Door het douchen op werk bespaar je per jaar: {result} EUR";
+
         return new AnswerResponse(responseText);
     }
-    
+
     [HttpGet("/report")]
     public ReportSession GetReport()
     {

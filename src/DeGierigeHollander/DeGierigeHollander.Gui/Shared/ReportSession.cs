@@ -1,4 +1,4 @@
-namespace DeGierigeHollander.Gui.Server.Controllers;
+namespace DeGierigeHollander.Gui.Shared;
 
 public class ReportSession
 {
@@ -6,7 +6,6 @@ public class ReportSession
     public decimal HomeQuestionPricePerYear { get; set; }
 
     public decimal ShowerPerYear { get; set; }
-
-    
+   
     public decimal Sum => LaptopQuestionReponsePricePerYear + HomeQuestionPricePerYear;
 }
