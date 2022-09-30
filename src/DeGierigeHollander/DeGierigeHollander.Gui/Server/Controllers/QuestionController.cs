@@ -13,7 +13,7 @@ public class QuestionController
     
     public decimal HomeworkHeatingConsumption { get; set; } = 2;
 
-    public int DailyVolumeInM3Gas = 3;
+    public decimal DailyVolumeInM3Gas = 2.1m;
 
     public decimal PricePerM3Gas = 3.83m;
     
@@ -48,7 +48,7 @@ public class QuestionController
     [HttpPost("/howeworkQuestion")]
     public AnswerResponse HomeworkQuestion(Answer<int> answer)
     {
-        var priceperHourHomework = DailyVolumeInM3Gas / 16m * PricePerM3Gas;
+        var priceperHourHomework = DailyVolumeInM3Gas / 10m * PricePerM3Gas;
         var uurHomeworkPerWeek = answer.Value * 8;
         var result = uurHomeworkPerWeek * priceperHourHomework * 52;
         var responseText = $"De kost van thuiswerk voor verwarming per jaar is: {result} EUR";
