@@ -8,8 +8,8 @@ namespace DeGierigeHollander.Gui.Server.Controllers;
 [Route("[controller]")]
 public class QuestionController
 {
-    public decimal PricePerKiloWatt { get; set; }
-    public decimal LaptopConsumptionStandBy { get; set; }
+    public decimal PricePerKiloWatt { get; set; } = 2;
+    public decimal LaptopConsumptionStandBy { get; set; } = 2;
     
     [HttpGet]
     public IEnumerable<Question> Get()
@@ -20,7 +20,13 @@ public class QuestionController
             {
                 QuestionString = "Hoeveel uur laat je je laptop aan per week?  ",
                 ResponseUrl = "/laptopQuestion",
-                AnswerType = typeof(Answer<int>)
+                AnswerType = typeof(Answer<int>).ToString()
+            },
+            new Question()
+            {
+                QuestionString = "Hoeveel uur laat je je laptop aan per week?  ",
+                ResponseUrl = "/laptopQuestion",
+                AnswerType = typeof(Answer<int>).ToString()
             }
         };
     }
@@ -28,7 +34,8 @@ public class QuestionController
     [HttpPost("/laptopQuestion")]
     public AnswerResponse LaptopQuestion(Answer<int> answer)
     {
-        var responseText = (answer.Value * PricePerKiloWatt * LaptopConsumptionStandBy * 52).ToString(CultureInfo.InvariantCulture);
+        var responseText = $"Het verbruik van je laptop in slaapstand per jaar is {(answer.Value * PricePerKiloWatt * LaptopConsumptionStandBy * 52).ToString(CultureInfo.InvariantCulture)}EUR";
+        
         return new AnswerResponse(responseText);
     }
 }
