@@ -30,12 +30,12 @@ public class QuestionController
     {
         return new List<Question>()
         {
-            new()
-            {
-                QuestionString = "Hoeveel uur laat je je laptop aan per week?  ",
-                ResponseUrl = "/laptopQuestion",
-                AnswerType = typeof(int).ToString()
-            },
+            // new()
+            // {
+            //     QuestionString = "Hoeveel uur laat je je laptop aan per week?  ",
+            //     ResponseUrl = "/laptopQuestion",
+            //     AnswerType = typeof(int).ToString()
+            // },
             new()
             {
                 QuestionString = "Hoeveel dagen werk je van thuis per week?  ",
@@ -70,12 +70,21 @@ public class QuestionController
         _reportSession.HomeQuestionPricePerYear = result;
 
         var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
-        _reportSession.LaptopQuestionReponsePricePerYear = calculation;        
-        var responseText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
-        _reportSession.TotalAsString.Add(responseText);
-        var otherResponseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
-        _reportSession.TotalAsString.Add(otherResponseText);
-        return new AnswerResponse(responseText);
+        _reportSession.LaptopQuestionReponsePricePerYear = calculation;
+        
+        var laptopText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
+        _reportSession.TotalAsString.Add(laptopText);
+        
+        
+        
+        var toiletText = $"De meerkost van thuiswerk voor de grote boodschap per jaar is: {42} EUR {Environment.NewLine}";
+        _reportSession.Toilet = 42;
+        _reportSession.TotalAsString.Add(toiletText);
+
+        var heatingText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR ";
+        _reportSession.TotalAsString.Add(heatingText);
+
+        return new AnswerResponse($"{laptopText} {Environment.NewLine} {heatingText} {Environment.NewLine} {toiletText}");
     }
 
     [HttpPost("/doucheQuestion")]

@@ -10,4 +10,5 @@ public class ReportSession
     public decimal Total => LaptopQuestionReponsePricePerYear + HomeQuestionPricePerYear;
     
     public List<string> TotalAsString { get; set; } = new List<string>();
+    public int Toilet { get; set; }
 }
