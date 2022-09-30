@@ -7,53 +7,63 @@
 
 @using DeGierigeHollander.Gui.Shared
 
-<h3>Let's go!</h3>
-
-@foreach (var question in Questions)
+@if (!reportMode)
 {
-    @*<EditForm Model="@question" OnValidSubmit="() => OnValidSubmit(question)">
-        <p>@question.GetQuestion()</p>
-        <InputNumber Value="@GetValue(question)" ValueChanged="@((int value) => ValueChanged(question, value))" ValueExpression="@(() => ((Question<int>)question).UserResponse)" />
-        <input type="submit" value="Add" />
-        @if (!string.IsNullOrEmpty(responseText))
+    <h3>Let's go!</h3>
+    @if (Questions.Any() && Questions.ToArray()[visibleQuestionIndex] is not null)
+    {
+        @switch (GetTypeOf())
         {
-            <p>@responseText</p>
+            case TypeCode.Int32:
+                <QuestionItem TItem=Int32 OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+                break;
+            case TypeCode.Boolean:
+                <QuestionItem TItem=Boolean OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+                break;
         }
-    </EditForm>*@
+
+    }
+}
+else
+{
+    <button @onclick="GenerateReport">Generate report</button>
+
 }
 
 @code {
     private IEnumerable<Question> Questions = Enumerable.Empty<Question>();
 
-    private string? responseText;
+    private int visibleQuestionIndex = 0;
 
-    protected override async Task  OnInitializedAsync()
+    private bool reportMode = false;
+
+    protected override async Task OnInitializedAsync()
     {
         Questions = await GetQuestionsAsync();
     }
 
     private async Task<IEnumerable<Question>> GetQuestionsAsync()
     {
-        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>("/api/questions");
+        var questions = await Http.GetFromJsonAsync<IEnumerable<Question>>("/question");
         Console.WriteLine(JsonSerializer.Serialize(questions));
 
         return questions;
     }
-
-    private void OnValidSubmit(Question question)
+    private void OnNextQuestion()
     {
-        //responseText = question.GetResponseText();
+        if (Questions.Count() - 1 > visibleQuestionIndex)
+            visibleQuestionIndex++;
+        else
+            Console.WriteLine("You're done");
+    }
+    private TypeCode GetTypeOf()
+    {
+        var type = Type.GetType(Questions.ToArray()[visibleQuestionIndex].AnswerType);
+        return Type.GetTypeCode(type);
     }
 
-    private int GetValue(Question question)
+    private async void GenerateReport()
     {
-
-        return 0;
-        //return ((Question<int>)question).UserResponse;
-    }
-
-    private void ValueChanged(Question question, int value)
-    {
-        //((Question<int>)question).UserResponse = value;
+      var response = await Http.GetFromJsonAsync<ReportSession>("/report");
     }
 }

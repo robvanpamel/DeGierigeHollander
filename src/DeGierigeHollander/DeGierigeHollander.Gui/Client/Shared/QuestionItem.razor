@@ -1,0 +1,61 @@
+﻿@using DeGierigeHollander.Gui.Shared
+@inject HttpClient HttpClient
+@typeparam TItem
+
+<h3>Question</h3>
+
+<EditForm Model="@Question" OnValidSubmit="OnValidSubmit">
+    <p>@Question.QuestionString</p>
+    @switch(Type.GetTypeCode(typeof(TItem)))
+    {
+        case TypeCode.Int32:
+            <InputNumber class="pb" Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
+            break;
+        case TypeCode.Boolean:
+            <InputRadioGroup class="pb"  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
+                <InputRadio id="Yes" Value="true" />
+                    <label for="Yes">Ja</label>
+         
+                <InputRadio id="No" Value="false" />
+                  <label for="No">Nee</label>
+            </InputRadioGroup>
+            break;
+    }
+   
+   <div>
+        <input class="btn-primary pb" type="submit" value="Submit" />
+   </div>
+    @if (!string.IsNullOrEmpty(responseText))
+    {
+        <h2 class="pb">@responseText</h2>
+    }
+</EditForm>
+ @if (!string.IsNullOrEmpty(responseText))
+{
+    <button class="btn-primary pb" @onclick=NextQuestion>Next question</button>
+}
+
+@code {
+    [Parameter]
+    public Question Question { get; set; }
+
+    [Parameter]
+    public EventCallback OnNextQuestion { get; set; }
+
+    private TItem userResponse;
+
+    private string? responseText;
+
+    private async Task OnValidSubmit()
+    {
+        var response = await HttpClient.PostAsJsonAsync<Answer<TItem>>(Question.ResponseUrl, new Answer<TItem> { Value = userResponse });
+        var answer = await response.Content.ReadFromJsonAsync<AnswerResponse>();
+        responseText = answer!.ResponseText;
+    }
+    private async Task NextQuestion()
+    {
+        await OnNextQuestion.InvokeAsync();
+        userResponse = default;
+        responseText = null;
+    }
+}
