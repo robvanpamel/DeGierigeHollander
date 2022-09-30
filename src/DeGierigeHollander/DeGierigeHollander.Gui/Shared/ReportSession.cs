@@ -7,8 +7,8 @@ public class ReportSession
 
     public decimal ShowerPerYear { get; set; }
 
-    public decimal Total => LaptopQuestionReponsePricePerYear + HomeQuestionPricePerYear;
- 
+    public decimal Total => LaptopQuestionReponsePricePerYear + HomeQuestionPricePerYear + ShowerPerYear + CcQuestionPricePerYear + DishwasherQuestionPerYear;
+
     public decimal CcQuestionPricePerYear { get; set; }
     public decimal DishwasherQuestionPerYear { get; set; }
  
