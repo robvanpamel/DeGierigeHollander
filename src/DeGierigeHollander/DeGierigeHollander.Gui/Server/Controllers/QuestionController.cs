@@ -71,12 +71,18 @@ public class QuestionController
 
         var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
         _reportSession.LaptopQuestionReponsePricePerYear = calculation;
-        _reportSession.TotalAsString.Add(responseText);
         
         var responseText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
         _reportSession.TotalAsString.Add(responseText);
-        var otherResponseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
+        
+        var otherResponseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR {Environment.NewLine}Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
         _reportSession.TotalAsString.Add(otherResponseText);
+        
+        
+        var toiletText = $"De meerkost van thuiswerk voor de grote boodschap per jaar is: {42} EUR {Environment.NewLine}";
+        _reportSession.Toilet = 42;
+        _reportSession.TotalAsString.Add(otherResponseText);
+
         return new AnswerResponse(responseText);
     }
 
