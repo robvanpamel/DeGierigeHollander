@@ -64,6 +64,6 @@ else
 
     private async void GenerateReport()
     {
-        await Http.GetFromJsonAsync<ReportSession>("/report");
+      var response = await Http.GetFromJsonAsync<ReportSession>("/report");
     }
 }

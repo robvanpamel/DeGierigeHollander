@@ -9,10 +9,10 @@
     @switch(Type.GetTypeCode(typeof(TItem)))
     {
         case TypeCode.Int32:
-            <InputNumber Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
+            <InputNumber class="pb" Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
             break;
         case TypeCode.Boolean:
-            <InputRadioGroup  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
+            <InputRadioGroup class="pb"  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
                 <InputRadio id="Yes" Value="true" />
                     <label for="Yes">Ja</label>
          
@@ -23,17 +23,16 @@
     }
    
    <div>
-        <input type="submit" value="Submit" />
+        <input class="btn-primary pb" type="submit" value="Submit" />
    </div>
     @if (!string.IsNullOrEmpty(responseText))
     {
-        <p>@responseText</p>
+        <h2 class="pb">@responseText</h2>
     }
 </EditForm>
- @if (userResponse is not null)
+ @if (!string.IsNullOrEmpty(responseText))
 {
-    <button @onclick=NextQuestion>Next question</button>
-
+    <button class="btn-primary pb" @onclick=NextQuestion>Next question</button>
 }
 
 @code {
