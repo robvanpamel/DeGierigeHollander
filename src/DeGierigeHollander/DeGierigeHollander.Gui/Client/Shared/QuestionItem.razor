@@ -2,37 +2,39 @@
 @inject HttpClient HttpClient
 @typeparam TItem
 
-<h3>Question</h3>
 
-<EditForm Model="@Question" OnValidSubmit="OnValidSubmit">
-    <p>@Question.QuestionString</p>
-    @switch(Type.GetTypeCode(typeof(TItem)))
-    {
-        case TypeCode.Int32:
-            <InputNumber class="pb" Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
-            break;
-        case TypeCode.Boolean:
-            <InputRadioGroup class="pb"  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
-                <InputRadio id="Yes" Value="true" />
-                    <label for="Yes">Ja</label>
-         
-                <InputRadio id="No" Value="false" />
-                  <label for="No">Nee</label>
-            </InputRadioGroup>
-            break;
-    }
-   
-   <div>
-        <input class="btn-primary pb" type="submit" value="Submit" />
-   </div>
-    @if (!string.IsNullOrEmpty(responseText))
-    {
-        <h2 class="pb">@responseText</h2>
-    }
-</EditForm>
+
+
  @if (!string.IsNullOrEmpty(responseText))
 {
+    <h2 class="pb">@responseText</h2>
     <button class="btn-primary pb" @onclick=NextQuestion>Next question</button>
+}
+else
+{
+    <h3>Question</h3>
+    <EditForm Model="@Question" OnValidSubmit="OnValidSubmit">
+        <p>@Question.QuestionString</p>
+        @switch (Type.GetTypeCode(typeof(TItem)))
+        {
+            case TypeCode.Int32:
+                <InputNumber class="pb" Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
+                break;
+            case TypeCode.Boolean:
+                <InputRadioGroup class="pb" Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
+                    <InputRadio id="Yes" Value="true" />
+                    <label for="Yes">Ja</label>
+
+                    <InputRadio id="No" Value="false" />
+                    <label for="No">Nee</label>
+                </InputRadioGroup>
+                break;
+        }
+
+        <div>
+            <input class="btn-primary pb" type="submit" value="Submit" />
+        </div>
+    </EditForm>
 }
 
 @code {

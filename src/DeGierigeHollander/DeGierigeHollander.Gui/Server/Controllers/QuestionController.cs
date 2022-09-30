@@ -70,9 +70,7 @@ public class QuestionController
         _reportSession.HomeQuestionPricePerYear = result;
 
         var calculation = answer.Value * PricePerKiloWatt * LaptopConsumptionStandByKWH * 52;
-        _reportSession.LaptopQuestionReponsePricePerYear = calculation;
-        _reportSession.TotalAsString.Add(responseText);
-        
+        _reportSession.LaptopQuestionReponsePricePerYear = calculation;        
         var responseText = $"Het verbruik van je laptop per jaar is {calculation.ToString(CultureInfo.InvariantCulture)}EUR";
         _reportSession.TotalAsString.Add(responseText);
         var otherResponseText = $"De meerkost van thuiswerk voor verwarming per jaar (zonder maaltijdcheques) is: {result} EUR";
