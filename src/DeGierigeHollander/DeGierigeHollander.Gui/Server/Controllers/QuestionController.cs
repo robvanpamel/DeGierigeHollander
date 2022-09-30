@@ -77,7 +77,7 @@ public class QuestionController
     [HttpPost("/doucheQuestion")]
     public AnswerResponse DoucheQuestion(Answer<bool> answer)
     {
-        var result = 0;
+        var result = 0.0m;
         if (answer.Value)
         {
             var pricePerShowerPerDay = DailyShowerVolumeInM3Gas * PricePerM3Gas;
