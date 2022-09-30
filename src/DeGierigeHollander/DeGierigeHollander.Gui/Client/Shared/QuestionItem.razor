@@ -12,9 +12,12 @@
             <InputNumber Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)" />
             break;
         case TypeCode.Boolean:
-            <InputRadioGroup  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)">
-                <InputRadio Value="true">Ja</InputRadio>
-                <InputRadio Value="false">Nee</InputRadio>
+            <InputRadioGroup  Value="@userResponse" ValueChanged="@((TItem value) => userResponse = value)" ValueExpression="@(() => userResponse)">
+                <InputRadio id="Yes" Value="true" />
+                    <label for="Yes">Ja</label>
+         
+                <InputRadio id="No" Value="false" />
+                  <label for="No">Nee</label>
             </InputRadioGroup>
             break;
     }

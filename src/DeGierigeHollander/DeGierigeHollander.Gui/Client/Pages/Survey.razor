@@ -7,24 +7,35 @@
 
 @using DeGierigeHollander.Gui.Shared
 
-<h3>Let's go!</h3>
-@if (Questions.Any() && Questions.ToArray()[visibleQuestionIndex] is not null)
+@if (!reportMode)
 {
-     @switch(GetTypeOf())
+    <h3>Let's go!</h3>
+    @if (Questions.Any() && Questions.ToArray()[visibleQuestionIndex] is not null)
     {
-        case TypeCode.Int32:
-         <QuestionItem TItem=Int32 OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
-            break;
-        case TypeCode.Boolean:
-         <QuestionItem TItem=Boolean OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
-            break;
+        @switch (GetTypeOf())
+        {
+            case TypeCode.Int32:
+                <QuestionItem TItem=Int32 OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+                break;
+            case TypeCode.Boolean:
+                <QuestionItem TItem=Boolean OnNextQuestion="OnNextQuestion" Question=Questions.ToArray()[visibleQuestionIndex]></QuestionItem>
+                break;
+        }
+
     }
+}
+else
+{
+    <button @onclick="GenerateReport">Generate report</button>
 
 }
+
 @code {
     private IEnumerable<Question> Questions = Enumerable.Empty<Question>();
 
     private int visibleQuestionIndex = 0;
+
+    private bool reportMode = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +51,7 @@
     }
     private void OnNextQuestion()
     {
-        if (Questions.Count() -1 > visibleQuestionIndex)
+        if (Questions.Count() - 1 > visibleQuestionIndex)
             visibleQuestionIndex++;
         else
             Console.WriteLine("You're done");
@@ -49,5 +60,10 @@
     {
         var type = Type.GetType(Questions.ToArray()[visibleQuestionIndex].AnswerType);
         return Type.GetTypeCode(type);
+    }
+
+    private async void GenerateReport()
+    {
+        await Http.GetFromJsonAsync<ReportSession>("/report");
     }
 }

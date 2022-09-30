@@ -60,7 +60,7 @@ public class QuestionController
         return new AnswerResponse(responseText);
     }
     
-    [HttpPost("/howeworkQuestion")]
+    [HttpPost("/homeworkQuestion")]
     public AnswerResponse HomeworkQuestion(Answer<int> answer)
     {
         var priceperHourHomework = DailyHeatingVolumeInM3Gas / 14m * PricePerM3Gas;
