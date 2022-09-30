@@ -24,6 +24,8 @@ public class QuestionController
     public decimal DailyShowerVolumeInM3Gas = 0.13m;
 
     public decimal PricePerM3Gas = 3.83m;
+    
+    public int YearlyDishwasherKWH = 305;
 
     [HttpGet]
     public IEnumerable<Question> Get()
@@ -47,7 +49,21 @@ public class QuestionController
                 QuestionString = "Kan je douchen op het werk?",
                 ResponseUrl = "/doucheQuestion",
                 AnswerType = typeof(bool).ToString()
-            }
+            },
+            
+            new()
+            {
+                QuestionString = "Hoeveel keer per jaar volgt u een opleiding of cc bij Axxes?",
+                ResponseUrl = "/ccQuestion",
+                AnswerType = typeof(int).ToString()
+            },
+            new()
+            {
+                QuestionString = "Neem je u vuile vaat mee naar het werk?",
+                ResponseUrl = "/dishwasherQuestion",
+                AnswerType = typeof(bool).ToString()
+            },
+
         };
     }
 
@@ -107,6 +123,38 @@ public class QuestionController
         return new AnswerResponse(responseText);
     }
 
+    
+    [HttpPost("/ccQuestion")]
+    public AnswerResponse CcQuestion(Answer<int> answer)
+    {
+        var result = 0.0m;
+ 
+        result = answer.Value * 5;
+        _reportSession.CcQuestionPricePerYear = result;
+ 
+        var responseText = $"Door te eten op de CC bespaar je per jaar: {result} EUR";
+        _reportSession.TotalAsString.Add(responseText);
+        return new AnswerResponse(responseText);
+    }
+ 
+    [HttpPost("/dishwasherQuestion")]
+    public AnswerResponse DishwasherQuestion(Answer<bool> answer)
+    {
+        var result = 0.0m;
+        if (answer.Value)
+        {
+            result = YearlyDishwasherKWH * PricePerKiloWatt;
+        }
+ 
+        _reportSession.DishwasherQuestionPerYear = result;
+ 
+        var responseText = $"Door je vuile vaat achter te laten op kantoor bespaar je per jaar: {result} EUR";
+        _reportSession.TotalAsString.Add(responseText);
+     
+        return new AnswerResponse(responseText);
+    }
+    
+    
     [HttpGet("/report")]
     public ReportSession GetReport()
     {
