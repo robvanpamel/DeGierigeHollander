@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -27,8 +28,8 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");

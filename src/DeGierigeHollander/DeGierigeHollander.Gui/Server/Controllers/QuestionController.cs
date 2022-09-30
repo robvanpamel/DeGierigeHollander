@@ -19,7 +19,8 @@ public class QuestionController
             new Question()
             {
                 QuestionString = "Hoeveel uur laat je je laptop aan per week?  ",
-                ResponseUrl = "/laptopQuestion"
+                ResponseUrl = "/laptopQuestion",
+                AnswerType = typeof(Answer<int>)
             }
         };
     }
